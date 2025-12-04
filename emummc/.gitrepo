@@ -4,9 +4,9 @@
 ; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
 ;
 [subrepo]
-	remote = git@github.com:lulle2007200/emuMMC.git
-	branch = internal-emummc
-	commit = 2d7e66d2097e5c25b584d1fc6c908de1642bdd9d
-	parent = 4a83cd0403a54f1a702b6f4b9609ca9ccc81902b
+	remote = https://github.com/m4xw/emummc
+	branch = develop
+	commit = 3c57b20ba3820ec87d7dd239d6fcf9ba97510606
+	parent = d61ee942d9b34cadd80464d5d549c5e2e5bf1689
 	method = merge
 	cmdver = 0.4.9
