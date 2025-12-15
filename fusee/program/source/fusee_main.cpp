@@ -118,7 +118,9 @@ namespace ams::nxboot {
         }
 
         /* Read emuMMC/emuSD config now, need to switch to emuSD, if active, to read AMS files from there */
-        ReadEmummcConfig();
+        if (R_FAILED(ReadEmummcConfig())) {
+			ShowFatalError("Failed to read emummc config.");
+		}
 
         /* Switch to emuSD, if active */
         SwapToEmuSd();
