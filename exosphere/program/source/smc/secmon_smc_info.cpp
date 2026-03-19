@@ -132,13 +132,13 @@ namespace ams::secmon::smc {
         }
 
         u32 GetMemoryMode() {
-            /* Unless development function is enabled or memory_mode_auto is set, we're 4 GB. */
+            /* Unless development function or forced boot config memory size is enabled, we're 4 GB. */
             u32 memory_mode = pkg1::MemoryMode_4GB;
 
-            if (GetSecmonConfiguration().IsMemoryModeAuto()) {
-                /* If memory_mode_auto is set, determine memory mode from physical memory */
-                memory_mode = GetMemoryMode(pkg1::MemoryMode_Auto);
-            } else if (const auto &bcd = GetBootConfig().data; bcd.IsDevelopmentFunctionEnabled()) {
+            const auto &bcd = GetBootConfig().data;
+            const auto &sc  = GetSecmonConfiguration(); /* Exosphere extensions */
+
+            if (bcd.IsDevelopmentFunctionEnabled() || sc.IsBootConfigMemoryModeEnabled()) {
                 memory_mode = GetMemoryMode(bcd.GetMemoryMode());
             }
             return memory_mode;
@@ -148,22 +148,19 @@ namespace ams::secmon::smc {
             pkg1::MemorySize memory_size = pkg1::MemorySize_4GB;
             util::BitPack32 value = {};
 
-            if (const auto &bcd = GetBootConfig().data; bcd.IsDevelopmentFunctionEnabled()) {
-                memory_size = GetMemorySize(GetMemoryMode(bcd.GetMemoryMode()));
+            const auto &bcd = GetBootConfig().data;
+            const auto &sc  = GetSecmonConfiguration(); /* Exosphere extensions */
 
+            if (bcd.IsDevelopmentFunctionEnabled()) {
                 value.Set<KernelConfiguration::Flags1>(bcd.GetKernelFlags1());
                 value.Set<KernelConfiguration::Flags0>(bcd.GetKernelFlags0());
             }
 
-            if (GetSecmonConfiguration().IsMemoryModeAuto()) {
-                memory_size = pkg1::GetMemorySize(GetMemoryMode(pkg1::MemoryMode_Auto));
+            if (bcd.IsDevelopmentFunctionEnabled() || sc.IsBootConfigMemoryModeEnabled()) {
+                memory_size = GetMemorySize(GetMemoryMode(bcd.GetMemoryMode()));
             }
 
-
             value.Set<KernelConfiguration::PhysicalMemorySize>(memory_size);
-
-            /* Exosphere extensions. */
-            const auto &sc = GetSecmonConfiguration();
 
             if (!sc.DisableUserModeExceptionHandlers()) {
                 value.Set<KernelConfiguration::EnableUserExceptionHandlers>(true);
