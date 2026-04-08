@@ -458,7 +458,7 @@ static void _file_based_sd_initialize(void)
             if (f_emu_sd.parts == 1)
                 f_emu_sd.parts = 0;
 
-            return;
+            break;
         }
 
         if(!f_expand_cltbl(&f_emu_sd.fp[f_emu_sd.parts], EMUSD_FP_CLMT_COUNT, &f_emu_sd.clmt[f_emu_sd.parts][0], f_size(&f_emu_sd.fp[f_emu_sd.parts]))){
@@ -513,8 +513,13 @@ static void _file_based_emmc_finalize(void)
         f_close(&f_emu.fp_boot0);
         f_close(&f_emu.fp_boot1);
 
-        for (int i = 0; i < f_emu.parts; i++)
-            f_close(&f_emu.fp_gpp[i]);
+        {
+            int i = 0;
+            do {
+                f_close(&f_emu.fp_gpp[i]);
+                i++;
+            } while (i < f_emu.parts);
+        }
 
         // Force unmount FAT volume.
         if (emuMMC_ctx.EMMC_Type == EmummcType_File_Emmc) {
@@ -532,9 +537,11 @@ static void _file_based_sd_finalize(void)
 {
     if((emuMMC_ctx.SD_Type == EmummcType_File_Emmc || emuMMC_ctx.SD_Type == EmummcType_File_Sd) && file_based_sd_initialized){
         _ensure_correct_partition(FS_SDMMC_SD);
-        for(int i = 0; i < f_emu_sd.parts; i++){
+        int i = 0;
+        do {
             f_close(&f_emu_sd.fp[i]);
-        }
+            i++;
+        } while(i < f_emu_sd.parts);
 
         if(emuMMC_ctx.SD_Type == EmummcType_File_Emmc) {
             _mount_emmc(false);
@@ -716,7 +723,7 @@ static void _file_based_emmc_initialize(void)
             if (f_emu.parts == 1)
                 f_emu.parts = 0;
 
-            return;
+            break;
         }
 
         if (!f_expand_cltbl(&f_emu.fp_gpp[f_emu.parts], EMUMMC_FP_CLMT_COUNT,
@@ -1052,7 +1059,7 @@ static uint64_t emummc_read_write_sd_inner(void *buf, unsigned int sector, unsig
                 goto out;
             }
         } else {
-            fp = &f_emu.fp_gpp[0];
+            fp = &f_emu_sd.fp[0];
         }
 
 

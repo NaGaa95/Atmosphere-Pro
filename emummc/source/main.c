@@ -344,7 +344,18 @@ static bool load_emummc_sd_ctx(void) {
     exo_emummc_config_t config;
     __attribute__((aligned(0x1000))) exo_emummc_paths_t paths;
 
-    load_emummc_cfg(EXO_EMUMMC_MMC_SD, &config, &paths);
+    // Try to get SD config. Official Atmosphere exosphere does not support
+    // EXO_EMUMMC_MMC_SD and returns SmcResult::NotSupported. In that case,
+    // fall through to the default SD behavior (no SD redirection).
+    int x = smcGetEmummcConfig(EXO_EMUMMC_MMC_SD, &config, &paths);
+    if(x != 0) {
+        DEBUG_LOG("GetEmummcConfig SD smc not supported, using defaults\n");
+        emuMMC_ctx.SD_Type                   = EmummcType_Partition_Sd;
+        emuMMC_ctx.SD_StoragePartitionOffset = 0;
+        emuMMC_ctx.fs_ver                    = FS_VER_MAX;
+        emuMMC_ctx.magic                     = (u32)-1;
+        return false;
+    }
 
     if (config.base_cfg.magic == EMUMMC_STORAGE_MAGIC) {
         emuMMC_ctx.magic                     = config.base_cfg.magic;
