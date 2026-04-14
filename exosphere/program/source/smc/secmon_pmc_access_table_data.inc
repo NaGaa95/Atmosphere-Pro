@@ -44,4 +44,11 @@ SetRegisterAllowed(APBDEV_PMC_SEL_DPD_TIM);          /* 0x1C8 */
 SetRegisterAllowed(APBDEV_PMC_TSC_MULT);             /* 0x2B4 */
 SetRegisterAllowed(APBDEV_PMC_GPU_RG_CNTRL);         /* 0x2D4 */
 SetRegisterAllowed(APBDEV_PMC_CNTRL2);               /* 0x440 */
+SetRegisterAllowed(APBDEV_PMC_AOTAG_CFG);            /* 0x484 */
+SetRegisterAllowed(APBDEV_PMC_TSENSOR_CONFIG0);      /* 0x49C */
+SetRegisterAllowed(APBDEV_PMC_TSENSOR_CONFIG1);      /* 0x4A0 */
+SetRegisterAllowed(APBDEV_PMC_TSENSOR_CONFIG2);      /* 0x4A4 */
+SetRegisterAllowed(APBDEV_PMC_TSENSOR_STATUS0);      /* 0x4A8 */
+SetRegisterAllowed(APBDEV_PMC_TSENSOR_STATUS1);      /* 0x4AC */
+SetRegisterAllowed(APBDEV_PMC_TSENSOR_PDIV);         /* 0x4B4 */
 SetRegisterAllowed(APBDEV_PMC_WAKE_DEBOUNCE_EN);     /* 0x4D8 */
