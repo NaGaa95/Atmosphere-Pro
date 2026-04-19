@@ -60,6 +60,7 @@
 #define APBDEV_PMC_WEAK_BIAS             (0x2C8)
 #define APBDEV_PMC_REG_SHORT             (0x2CC)
 #define APBDEV_PMC_GPU_RG_CNTRL          (0x2D4)
+#define APBDEV_PMC_AOTAG_CFG		     (0x484)
 #define APBDEV_PMC_TSENSOR_CONFIG0       (0x49C)
 #define APBDEV_PMC_TSENSOR_CONFIG1       (0x4A0)
 #define APBDEV_PMC_TSENSOR_CONFIG2       (0x4A4)
